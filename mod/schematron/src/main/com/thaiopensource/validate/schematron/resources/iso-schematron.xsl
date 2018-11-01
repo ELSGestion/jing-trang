@@ -497,6 +497,9 @@
        Error location for Jing for Jing
        Uses saxon:* extension functions; only available with a PE / EE license -->
   <xsl:template name="location">
+    <axsl:attribute name="location">
+      <axsl:apply-templates select="." mode="schematron-select-full-path"/>
+    </axsl:attribute>
     <xsl:choose>
       <xsl:when test="function-available('saxon:column-number') and
                       function-available('saxon:line-number') and
