@@ -434,6 +434,9 @@
     <xsl:element name="{if ($type = 'assert') then ('failed-assertion') else ('report')}">
       <xsl:attribute name="test" select="$pattern"/>
       <xsl:attribute name="role" select="$role"/>
+      <xsl:if test="@id">
+        <xsl:copy-of select="@id"/>
+      </xsl:if>
       <!-- Added error location -->
       <xsl:call-template name="location"/>
       <element>
@@ -495,6 +498,7 @@
     <axsl:attribute name="location">
       <axsl:apply-templates select="." mode="schematron-select-full-path"/>
     </axsl:attribute>
+    <xsl:message>cn =  <xsl:value-of select="saxon:column-number(.)"/></xsl:message>
     <xsl:choose>
       <xsl:when test="function-available('saxon:column-number') and
                       function-available('saxon:line-number') and
