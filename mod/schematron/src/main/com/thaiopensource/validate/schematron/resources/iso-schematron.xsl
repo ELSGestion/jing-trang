@@ -446,6 +446,11 @@
       <xsl:attribute name="role" select="$role"/>
       <!-- Added error location -->
       <xsl:call-template name="location"/>
+      <element>
+        <axsl:copy copy-namespaces="no">
+          <axsl:copy-of select="@*"/>
+        </axsl:copy>
+      </element>
       <statement>
         <xsl:choose>
           <xsl:when test="$r = 'warning' or $r = 'warn'">
