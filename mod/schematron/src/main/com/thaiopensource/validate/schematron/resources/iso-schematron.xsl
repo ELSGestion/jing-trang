@@ -429,21 +429,11 @@
     <xsl:param name="type"/>
     <xsl:param name="see"/> <!-- Not used -->
     <!-- oXygen code for dealing with @role attribute -->
-    <xsl:variable name="actualRole">
-      <xsl:choose>
-        <xsl:when test="not($role)">
-          <xsl:value-of select="../@role"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$role"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="r" select="lower-case($actualRole)"/>
+    <xsl:variable name="role" select="lower-case(if(not($role)) then(../@role) else($role))"/>
     <!-- Jing own report structure -->
     <xsl:element name="{if ($type = 'assert') then ('failed-assertion') else ('report')}">
       <xsl:attribute name="test" select="$pattern"/>
-      <xsl:attribute name="role" select="$r"/>
+      <xsl:attribute name="role" select="$role"/>
       <!-- Added error location -->
       <xsl:call-template name="location"/>
       <element>
@@ -453,19 +443,19 @@
       </element>
       <statement>
         <xsl:choose>
-          <xsl:when test="$r = ('warning', 'warn')">
+          <xsl:when test="$role = ('warning', 'warn')">
             <axsl:text>[WARNING] </axsl:text>
           </xsl:when>
-          <xsl:when test="$r = 'fatal'">
+          <xsl:when test="$role = 'fatal'">
             <axsl:text>[FATAL] </axsl:text>
           </xsl:when>
-          <xsl:when test="$r = 'error'">
+          <xsl:when test="$role = 'error'">
             <axsl:text>[ERROR] </axsl:text>
           </xsl:when>
-          <xsl:when test="$r = ('info', 'information')">
+          <xsl:when test="$role = ('info', 'information')">
             <axsl:text>[INFO] </axsl:text>
           </xsl:when>
-          <xsl:when test="$r = ''">
+          <xsl:when test="$role = ''">
             <axsl:text>[MESSAGE] </axsl:text>
           </xsl:when>
         </xsl:choose>
