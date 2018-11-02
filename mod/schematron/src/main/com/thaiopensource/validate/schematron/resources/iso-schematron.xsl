@@ -498,19 +498,18 @@
     <axsl:attribute name="location">
       <axsl:apply-templates select="." mode="schematron-select-full-path"/>
     </axsl:attribute>
-    <xsl:message>cn =  <xsl:value-of select="saxon:column-number(.)"/></xsl:message>
-    <xsl:choose>
-      <xsl:when test="function-available('saxon:column-number') and
+    <axsl:choose>
+      <axsl:when test="function-available('saxon:column-number') and
                       function-available('saxon:line-number') and
                       function-available('saxon:system-id')">
         <axsl:attribute name="column-number" select="saxon:column-number()"/>
         <axsl:attribute name="line-number" select="saxon:line-number()"/>
         <axsl:attribute name="system-id" select="saxon:system-id()"/>
-      </xsl:when>
-      <xsl:otherwise>
+      </axsl:when>
+      <axsl:otherwise>
         <!-- Fallback if saxon:* functions are not available (with a Saxon HE edition for example) -->
-      </xsl:otherwise>
-    </xsl:choose>
+      </axsl:otherwise>
+    </axsl:choose>
   </xsl:template>
 
 
