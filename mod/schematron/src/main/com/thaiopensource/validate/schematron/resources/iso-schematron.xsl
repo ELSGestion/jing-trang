@@ -426,7 +426,7 @@
     <xsl:param name="pattern"/>
     <xsl:param name="role"/>
     <xsl:param name="diagnostics"/>
-    <xsl:param name="type"/>
+    <xsl:param name="type" select="if(local-name() = ('assert', 'report')) then(local-name()) else('')"/>
     <xsl:param name="see"/> <!-- Not used -->
     <!-- oXygen code for dealing with @role attribute -->
     <xsl:variable name="role" select="lower-case(if(not($role)) then(../@role) else($role))"/>
