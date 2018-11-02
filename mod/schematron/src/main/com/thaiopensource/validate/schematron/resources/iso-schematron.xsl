@@ -439,11 +439,11 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="r" select="translate($actualRole, 'WARNING FATAL INFORMATION ERROR', 'warning fatal information error')"/>
+    <xsl:variable name="r" select="lower-case($actualRole)"/>
     <!-- Jing own report structure -->
     <xsl:element name="{if ($type = 'assert') then ('failed-assertion') else ('report')}">
       <xsl:attribute name="test" select="$pattern"/>
-      <xsl:attribute name="role" select="$role"/>
+      <xsl:attribute name="role" select="$r"/>
       <!-- Added error location -->
       <xsl:call-template name="location"/>
       <element>
@@ -453,7 +453,7 @@
       </element>
       <statement>
         <xsl:choose>
-          <xsl:when test="$r = 'warning' or $r = 'warn'">
+          <xsl:when test="$r = ('warning', 'warn')">
             <axsl:text>[WARNING] </axsl:text>
           </xsl:when>
           <xsl:when test="$r = 'fatal'">
@@ -462,7 +462,7 @@
           <xsl:when test="$r = 'error'">
             <axsl:text>[ERROR] </axsl:text>
           </xsl:when>
-          <xsl:when test="$r = 'info' or $r = 'information'">
+          <xsl:when test="$r = ('info', 'information')">
             <axsl:text>[INFO] </axsl:text>
           </xsl:when>
           <xsl:when test="$r = ''">
