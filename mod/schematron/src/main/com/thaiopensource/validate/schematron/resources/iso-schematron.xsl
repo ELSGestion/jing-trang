@@ -417,6 +417,7 @@
     <xsl:param name="see"/> <!-- Not used -->
     <xsl:param name="space"/> <!-- Not used -->
     <result>
+      <xsl:copy-of select="@id | @xml:lang"/>
       <xsl:copy-of select="$contents" copy-namespaces="no"/>
     </result>
   </xsl:template>
@@ -434,9 +435,7 @@
     <xsl:element name="{if ($type = 'assert') then ('failed-assertion') else ('report')}">
       <xsl:attribute name="test" select="$pattern"/>
       <xsl:attribute name="role" select="$role"/>
-      <xsl:if test="@id">
-        <xsl:copy-of select="@id"/>
-      </xsl:if>
+      <xsl:copy-of select="@id | @xml:lang"/>
       <!-- Added error location -->
       <xsl:call-template name="location"/>
       <element>
