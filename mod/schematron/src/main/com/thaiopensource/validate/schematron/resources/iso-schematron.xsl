@@ -395,6 +395,9 @@
 
  3. This notice may not be removed or altered from any source distribution.
 -->
+  
+  
+  <xsl:param name="duplicate-reported-element">false</xsl:param>
 
   <!-- Schematron message -->
 
@@ -446,6 +449,7 @@
       <xsl:attribute name="role" select="$role"/>
       <!-- Added error location -->
       <xsl:call-template name="location"/>
+      <xsl:call-template name="duplicate-element"/>
       <statement>
         <xsl:choose>
           <xsl:when test="$r = 'warning' or $r = 'warn'">
@@ -509,6 +513,15 @@
         <!-- Fallback if saxon:* functions are not available (with a Saxon HE edition for example) -->
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template name="duplicate-element">
+    <xsl:if test="$duplicate-reported-element and not($duplicate-reported-element = 'false')">
+      <element>
+        <axsl:variable name="elementOrParent" select="if(self::element()) then . else parent::element()[1]" />
+        <axsl:copy-of select="$elementOrParent" />
+      </element>
+    </xsl:if>
   </xsl:template>
 
 
