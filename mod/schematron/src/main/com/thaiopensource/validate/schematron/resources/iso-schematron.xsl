@@ -395,6 +395,43 @@
 
  3. This notice may not be removed or altered from any source distribution.
 -->
+  
+  
+  <xsl:param name="duplicate-reported-element">false</xsl:param>
+  
+  <xsl:template name="add-duplication-template">
+    <xsl:if test="$duplicate-reported-element and not($duplicate-reported-element = 'false')">
+      <!-- TODO AXSL -->
+      <axsl:template match="node() | @*" mode="duplicate-reported-element.handle_target">
+        <axsl:choose>
+          <axsl:when test="self::element()">
+            <axsl:apply-templates select="." mode="duplicate-reported-element.empty-copy" />
+          </axsl:when>
+          <axsl:when test="self::attribute()">
+            <axsl:apply-templates select="parent::element()" mode="duplicate-reported-element.empty-copy" />
+          </axsl:when>
+          <axsl:when test="self::text()">
+            <axsl:apply-templates select="parent::element()" mode="duplicate-reported-element.empty-copy" >
+              <axsl:with-param name="text-content" select="."></axsl:with-param>
+            </axsl:apply-templates>
+          </axsl:when>
+        </axsl:choose>
+      </axsl:template>
+      
+      <axsl:template match="node() | @*" mode="duplicate-reported-element.empty-copy">
+        <axsl:param name="text-content" as="text()?"/>
+        <axsl:copy>
+          <axsl:copy-of select="@*" />
+          <axsl:if test="$text-content">
+            <axsl:copy-of select="$text-content" />
+          </axsl:if>
+        </axsl:copy>
+      </axsl:template>
+      
+      
+    </xsl:if>
+  </xsl:template>
+ 
 
   <!-- Schematron message -->
 
@@ -446,6 +483,7 @@
       <xsl:attribute name="role" select="$role"/>
       <!-- Added error location -->
       <xsl:call-template name="location"/>
+      <xsl:call-template name="duplicate-element"/>
       <statement>
         <xsl:choose>
           <xsl:when test="$r = 'warning' or $r = 'warn'">
@@ -509,6 +547,14 @@
         <!-- Fallback if saxon:* functions are not available (with a Saxon HE edition for example) -->
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template name="duplicate-element">
+    <xsl:if test="$duplicate-reported-element and not($duplicate-reported-element = 'false')">
+      <element>
+        <axsl:apply-templates select="." mode="duplicate-reported-element.handle_target" />
+      </element>
+    </xsl:if>
   </xsl:template>
 
 
@@ -1004,7 +1050,7 @@ THE SOFTWARE.
   which I find a bit surprising but anyway I'll use the longr faster version.
 -->
   <xsl:variable name="context-xpath">
-    <xsl:if test="$attributes = 'true' and parent::node()">@*|</xsl:if>
+    <xsl:if test="$attributes = 'true'">@*|</xsl:if>
     <xsl:choose>
       <xsl:when test="$only-child-elements = 'true'">*</xsl:when>
       <xsl:when test="$visit-text = 'true'">node()</xsl:when>
@@ -1173,8 +1219,14 @@ THE SOFTWARE.
     <xsl:apply-templates mode="do-types" select="xsl:import-schema"/>
     <xsl:text>&#10;&#10;</xsl:text>
     <xsl:comment>KEYS AND FUNCTIONS</xsl:comment>
-    <xsl:text>&#10;</xsl:text>
+    <xsl:text>&#10;</xsl:text> 
     <xsl:apply-templates mode="do-keys" select="xsl:key | xsl:function"/>
+    
+    <xsl:text>&#10;&#10;</xsl:text>
+    <xsl:comment>OPTIONNAL ELEMENT DUPLICATION - param $duplicate-reported-element</xsl:comment>
+    <xsl:text>&#10;</xsl:text> 
+    <xsl:call-template name="add-duplication-template"></xsl:call-template>
+    
     <xsl:text>&#10;&#10;</xsl:text>
     <xsl:comment>DEFAULT RULES</xsl:comment>
     <xsl:text>&#10;</xsl:text>
