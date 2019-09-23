@@ -334,7 +334,7 @@ public class PatternMatcher implements Cloneable, Matcher {
     if (ignoreError())
       return true;
     hadError = true;
-    errorMessage = localizer().message(key, args);
+    errorMessage = key + ": " + localizer().message(key, args);
     return false;
   }
    
