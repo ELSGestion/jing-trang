@@ -118,6 +118,6 @@ public class PatternMatcherTest extends SchemaPatternBuilder {
     // element "root" missing required attribute "foo"
     // Now we should get the correct namespace for the missing attribute:
     Assert.assertEquals(matcher.getErrorMessage(), 
-        "element \"root\" missing required attribute \"ns:foo\" (with xmlns:ns=\"http://example.com/\")");
+        "required_attribute_missing: element \"root\" missing required attribute \"ns:foo\" (with xmlns:ns=\"http://example.com/\")");
   }
 }
