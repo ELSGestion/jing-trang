@@ -965,6 +965,7 @@
               haltonfailure="true"
               suiteName="mod.pattern.test-unit"
               listeners="org.testng.reporters.DotTestListener">
+         <jvmarg value="-Duser.language=en"/>
          <classfileset dir="${build.dir}/mod/pattern/classes/test" includes="**/*.class"/>
          <classpath>
             <pathelement location="${build.dir}/mod/pattern/classes/test"/>
